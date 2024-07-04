@@ -108,6 +108,9 @@ import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 void main() {
+  print("ookkook");
+  print("ookkook");
+  print("ookkook");
   runApp( MyApp());
 }
 
