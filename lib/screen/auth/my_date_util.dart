@@ -15,7 +15,9 @@ class MyDateUtil{
       return dateTime;
     }
     final dateTime="${date.month}/${date.day}";
+    print("okokok");
     return dateTime;
+
 
   }
 
