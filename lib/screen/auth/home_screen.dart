@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:chat_app/demo.dart';
 import 'package:chat_app/screen/auth/api.dart';
 import 'package:chat_app/screen/auth/chat_modal.dart';
@@ -10,14 +9,11 @@ import 'package:chat_app/screen/auth/my_date_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-
 import '../../messaging/firebase_chat_app_messaginc.dart';
 import 'loginn_screen.dart';
-Future<void> initOneSignal(BuildContext context) async {
+import 'package:http/http.dart' as http;
 
-}
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -28,6 +24,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    OneSignal.shared.getDeviceState().then((val){
+      print(val?.userId.runtimeType);
+      print(val?.userId);
+      deviceTocken=val?.userId??"NO";
+      callingTheCurrentUser();
+    });
     Api.forUpdatingTheStatus(true);
     super.initState();
     callingTheCurrentUser();
@@ -52,7 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async{
-          initOneSignal(context);
+          print(deviceTocken);
+
         },
         child: Icon(
           Icons.chat_outlined,
@@ -185,4 +188,34 @@ Widget CustomCard(ChatUsers obj, BuildContext context) {
       );
     },
   );
+}
+Future<void> sendNotification(String content,String senderId,String senderName) async {
+  print("call");
+  var headers = {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Authorization': "Basic NTcyN2UxMTItNDBmZS00NzhiLTkyNzMtNDNmZGFkYzM0YWMx",
+  };
+
+  var body = json.encode({
+    "app_id": "35719def-c861-48a3-ae24-383a0e520291",
+    "include_player_ids": [
+      senderId,
+      // "bee668d7-9482-49e6-8241-0784673703dd",
+      // "2c60b96d-6349-4881-85b7-ee31c2c3b999"
+    ],
+    "headings": {"en": "$senderName"},
+    "contents": {"en": "$content"}
+  });
+
+  var response = await http.post(
+    Uri.parse('https://onesignal.com/api/v1/notifications'),
+    headers: headers,
+    body: body,
+  );
+
+  if (response.statusCode == 200) {
+    print('Notification sent successfully');
+  } else {
+    print('Failed to send notification: ${response.body}');
+  }
 }

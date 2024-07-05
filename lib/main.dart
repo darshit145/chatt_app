@@ -1,8 +1,9 @@
-/*import 'package:chat_app/firebase_options.dart';
+import 'package:chat_app/firebase_options.dart';
 import 'package:chat_app/screen/auth/loginn_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 Future<void> main()  async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,14 +17,24 @@ Future<void> main()  async {
   runApp(const MyApp());
 
 }
-_initiaalizeFirebase()async{
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+void initOneSignal() {
+  OneSignal.shared.setAppId("35719def-c861-48a3-ae24-383a0e520291");
+  OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+  });
+  OneSignal.shared.setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event) {
+    event.complete(event.notification);
+
+  });
+
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    initOneSignal();
     return   MaterialApp(
       themeMode: ThemeMode.dark,
       theme: ThemeData(
@@ -32,7 +43,7 @@ class MyApp extends StatelessWidget {
 
         ),
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.blueGrey.shade600,
           centerTitle: true,
           titleTextStyle: TextStyle(color: Colors.white,fontSize: 30)
         )
@@ -42,7 +53,9 @@ class MyApp extends StatelessWidget {
       home:  LoginnScreen(),
     );
   }
-}*/
+}
+
+
 //
 // import 'package:chat_app/screen/auth/loginn_screen.dart';
 // import 'package:flutter/material.dart';
@@ -102,6 +115,7 @@ class MyApp extends StatelessWidget {
 //   }
 // }
 //
+/*
 
 
 import 'package:flutter/material.dart';
@@ -165,6 +179,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+*/
 
 /*
 
@@ -222,6 +237,82 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          title: Text('OneSignal Notifications'),
+        ),
+        body: Center(
+          child: Text('Sending notification to User A...'),
+        ),
+      ),
+    );
+  }
+}
+*/
+/*
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  String? playerIdOfUserA = "PLAYER_ID_OF_USER_A"; // Replace with actual Player ID
+
+  @override
+  void initState() {
+    super.initState();
+    initOneSignal();
+  }
+
+  void initOneSignal() {
+    OneSignal.shared.setAppId("35719def-c861-48a3-ae24-383a0e520291");
+
+    OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+
+    });
+
+    OneSignal.shared.setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event) {
+      print('Notification received in foreground: ${event.notification}');
+      event.complete(event.notification);
+      OneSignal.shared.getDeviceState().then((deviceState) {
+          playerIdOfUserA = deviceState?.userId;
+          print(deviceState?.userId);
+      });
+    });
+
+    // Send notification to specific user
+    if(playerIdOfUserA!=null){
+      print("PLAYER ID IS ==>$playerIdOfUserA");
+      sendNotificationToUser(playerIdOfUserA!);
+
+    }
+
+  }
+
+  void sendNotificationToUser(String playerId) {
+    print(playerId);
+    var notification = OSCreateNotification(
+      // appId: "35719def-c861-48a3-ae24-383a0e520291",
+      // playerId: playerId,
+      content: "This is a notification for User A from Flutter",
+      heading: "Test Notification", playerIds: [],
+    );
+
+    OneSignal.shared.postNotification(notification);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            OneSignal.shared.getDeviceState().then((val){
+              print(val);
+              print(val?.userId);
+            });
+          },
+        ),
         appBar: AppBar(
           title: Text('OneSignal Notifications'),
         ),

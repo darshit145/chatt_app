@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:chat_app/screen/auth/chat_users.dart';
+import 'package:chat_app/screen/auth/home_screen.dart';
 import 'package:chat_app/screen/auth/my_date_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -27,6 +29,11 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+
+        },
+      ),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: StreamBuilder(
@@ -164,6 +171,11 @@ class _ChatScreenState extends State<ChatScreen> {
                 if (textEditingController.text.isNotEmpty) {
                   Api.sendMessage(widget.user,
                       textEditingController.text.toString(), Type.text);
+                  sendNotification(
+                    textEditingController.text.toString(),
+                    widget.user.push_tocken,
+                    widget.user.name
+                  );
                   textEditingController.clear();
                 }
               },
@@ -232,13 +244,18 @@ void pickImage() async {
             mainAxisSize:MainAxisSize.min ,
             children:isMe? [
               Text("Options",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
-              modal.type==Type.image?showBorromSheetOption(onTap: (){},option: "Download  Image",wid: Icon(Icons.download)):showBorromSheetOption(onTap: (){},option: "Copy Text",wid: Icon(Icons.copy)),
-              showBorromSheetOption(onTap: (){},option: "Edit Text",wid: Icon(Icons.edit)),
-              showBorromSheetOption(onTap: (){},option: "Delete Text",wid: Icon(Icons.delete)),
+              modal.type==Type.image?showBorromSheetOption(onTap: (){},option: "Download  Image",wid: Icon(Icons.download)):showBorromSheetOption(onTap: (){copyIngtheText(modal);},option: "Copy Text",wid: Icon(Icons.copy)),
+              modal.type==Type.image?SizedBox():showBorromSheetOption(onTap: (){},option: "Edit Text",wid: Icon(Icons.edit)),
+
+              showBorromSheetOption(onTap: (){
+                deletingTheMessage(modal);
+                },option: "Delete Text",wid: Icon(Icons.delete)),
             ]:[
               Text("Options",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
-              modal.type==Type.image?showBorromSheetOption(onTap: (){},option: "Download  Image",wid: Icon(Icons.download)):showBorromSheetOption(onTap: (){},option: "Copy Text",wid: Icon(Icons.copy)),
-              showBorromSheetOption(onTap: (){},option: "Delete Text",wid: Icon(Icons.delete)),
+              modal.type==Type.image?showBorromSheetOption(onTap: (){},option: "Download  Image",wid: Icon(Icons.download)):showBorromSheetOption(onTap: (){copyIngtheText(modal);},option: "Copy Text",wid: Icon(Icons.copy)),
+              modal.type==Type.image?showBorromSheetOption(onTap: (){deletingTheMessage(modal);},option: "Delete  Image",wid: Icon(Icons.delete)):showBorromSheetOption(onTap: (){deletingTheMessage(modal);},option: "Delete Text",wid: Icon(Icons.delete)),
+
+
               
 
             ],
@@ -249,6 +266,15 @@ void pickImage() async {
       child:Api.userData.uid == modal.formId
         ? greenMessage(modal)
         : blueMessage(modal));
+  }
+  void copyIngtheText(ChatModal modal)async{
+    await Clipboard.setData(ClipboardData(text: modal.msg));
+    Navigator.pop(context);
+
+
+  }
+  void deletingTheMessage(ChatModal modle){
+    Api.deleteTheMessage(modle);
   }
 
   Widget greenMessage(ChatModal modal) {

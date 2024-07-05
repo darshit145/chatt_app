@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:chat_app/screen/auth/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
+import '../../messaging/firebase_chat_app_messaginc.dart';
 import 'api.dart';
 
 class LoginnScreen extends StatefulWidget {
@@ -36,6 +38,15 @@ class _LoginnScreenState extends State<LoginnScreen> {
   Widget build(BuildContext context) {
     HEIGHT = MediaQuery.of(context).size.height;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          OneSignal.shared.getDeviceState().then((val){
+            print(val);
+            print(val?.userId);
+            deviceTocken=val?.userId??"NO";
+          });
+        },
+      ),
       body: Stack(
         children: [
           Container(

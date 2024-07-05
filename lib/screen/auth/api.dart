@@ -77,6 +77,7 @@ class Api {
   }
 
   static String conversationId(String id)=>userData.uid.hashCode<=id.hashCode?"${userData.uid}_$id":"${id}_${userData.uid}";
+
   static Stream<QuerySnapshot<Map<String, dynamic>>> getallUserChat(ChatUsers user) {
     return firebaseFirestore
         .collection("chatingss/${conversationId(user.id)}/message")
@@ -96,13 +97,10 @@ class Api {
 
   }
   static Future<void> sendMessage(ChatUsers user,String message,Type typ)async{
-    print("kmm");
     String time=DateTime.now().millisecondsSinceEpoch.toString();
     ChatModal chatModal=ChatModal(msg: message, read: "", formId: userData.uid, sent: time, told: user.id, type: typ);
     final ref=firebaseFirestore.collection("chatingss/${conversationId(user.id)}/message");
     await ref.doc(time).set(chatModal.toJson());
-    print("ok");
-
   }
 
   static Future<void> updateMessageReadStatus(ChatModal Message, )async{
@@ -148,6 +146,18 @@ class Api {
     await firebaseFirestore
         .collection('chats')
         .doc(auth.currentUser!.uid).update({"push_tocken":deviceTocken});
+
+  }
+   static Future<void> deleteTheMessage(ChatModal chat)async{
+    // final dateTime=DateTime.now().millisecondsSinceEpoch;
+    await firebaseFirestore.collection("chatingss/${conversationId(chat.formId)}/message")
+        .doc(chat.sent).delete();
+
+    if(chat.type==Type.image){
+      await firebaseStorage.refFromURL(chat.told).delete();
+    }
+
+
 
   }
 
