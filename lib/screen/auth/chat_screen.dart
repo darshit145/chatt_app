@@ -42,7 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: IconButton(onPressed: () {
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(user: widget.user,),));
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(),));
 
             }, icon: Icon(Icons.camera,color: Colors.black,size: 30,)),
           )

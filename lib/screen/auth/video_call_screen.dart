@@ -1,7 +1,7 @@
 // import 'package:chat_app/screen/auth/chat_users.dart';
 // import 'package:flutter/material.dart';
 // import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
-// class VideoCallScreen extends StatefulWidget {
+// class VideoCallScreenFor extends StatefulWidget {
 //   ChatUsers user;
 //     VideoCallScreen({super.key,required this.user});
 //
@@ -22,3 +22,22 @@
 //     );
 //   }
 // }
+
+
+import 'package:flutter/material.dart';
+class VideoCallScreen extends StatelessWidget {
+  const VideoCallScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold();
+  }
+}
+// ZegoUIKitPrebuiltCall(
+// appID: 1301125078,
+// appSign: 'your AppSign',
+// userID: 'local user id',
+// userName: 'local user name',
+// callID: 'call id',
+// config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall(),
+// );
