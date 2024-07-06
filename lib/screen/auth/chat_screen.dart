@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:chat_app/screen/auth/chat_users.dart';
 import 'package:chat_app/screen/auth/home_screen.dart';
 import 'package:chat_app/screen/auth/my_date_util.dart';
+import 'package:chat_app/screen/auth/video_call_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../customclass.dart';
@@ -36,6 +38,15 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(onPressed: () {
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(user: widget.user,),));
+
+            }, icon: Icon(Icons.camera,color: Colors.black,size: 30,)),
+          )
+        ],
         title: StreamBuilder(
           stream: Api.getUserStatus(widget.user),
           builder: (context, snapshot) {
@@ -231,6 +242,7 @@ void pickImage() async {
         ));
   }
 
+
   Widget ChatMessage(ChatModal modal) {
     if (modal.read.isEmpty) {
       Api.updateMessageReadStatus(modal);
@@ -244,7 +256,12 @@ void pickImage() async {
             mainAxisSize:MainAxisSize.min ,
             children:isMe? [
               Text("Options",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
-              modal.type==Type.image?showBorromSheetOption(onTap: (){},option: "Download  Image",wid: Icon(Icons.download)):showBorromSheetOption(onTap: (){copyIngtheText(modal);},option: "Copy Text",wid: Icon(Icons.copy)),
+              modal.type==Type.image?showBorromSheetOption(onTap: ()async{
+               await saveImage(modal.msg).then((va){
+                 // Navigator.pop(context);
+
+               });
+              },option: "Download  Image",wid: Icon(Icons.download)):showBorromSheetOption(onTap: (){copyIngtheText(modal);},option: "Copy Text",wid: Icon(Icons.copy)),
               modal.type==Type.image?SizedBox():showBorromSheetOption(onTap: (){},option: "Edit Text",wid: Icon(Icons.edit)),
 
               showBorromSheetOption(onTap: (){
@@ -252,7 +269,9 @@ void pickImage() async {
                 },option: "Delete Text",wid: Icon(Icons.delete)),
             ]:[
               Text("Options",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
-              modal.type==Type.image?showBorromSheetOption(onTap: (){},option: "Download  Image",wid: Icon(Icons.download)):showBorromSheetOption(onTap: (){copyIngtheText(modal);},option: "Copy Text",wid: Icon(Icons.copy)),
+              modal.type==Type.image?showBorromSheetOption(onTap: (){
+                saveImage(modal.msg);
+              },option: "Download  Image",wid: Icon(Icons.download)):showBorromSheetOption(onTap: (){copyIngtheText(modal);},option: "Copy Text",wid: Icon(Icons.copy)),
               modal.type==Type.image?showBorromSheetOption(onTap: (){deletingTheMessage(modal);},option: "Delete  Image",wid: Icon(Icons.delete)):showBorromSheetOption(onTap: (){deletingTheMessage(modal);},option: "Delete Text",wid: Icon(Icons.delete)),
 
 
@@ -266,6 +285,14 @@ void pickImage() async {
       child:Api.userData.uid == modal.formId
         ? greenMessage(modal)
         : blueMessage(modal));
+  }
+  Future<void> saveImage(String path)async {
+    GallerySaver.saveImage(path,albumName: "We Chat").then((val){
+
+      Navigator.pop(context);
+      print("ok");
+    });
+
   }
   void copyIngtheText(ChatModal modal)async{
     await Clipboard.setData(ClipboardData(text: modal.msg));
