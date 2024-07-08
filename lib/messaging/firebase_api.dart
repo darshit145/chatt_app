@@ -38,10 +38,10 @@ class FirebaseApi {
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {
         if (notificationResponse.payload != null) {
-          navigatorKey.currentState?.pushNamed(
-            '/notification_page',
-            arguments: notificationResponse.payload,
-          );
+          // navigatorKey.currentState?.pushNamed(
+          //   '/notification_page',
+          //   arguments: notificationResponse.payload,
+          // );
         }
       },
     );
@@ -57,10 +57,10 @@ class FirebaseApi {
       _showNotification(notification);
     }
 
-    navigatorKey.currentState?.pushNamed(
-      '/notification_page',
-      arguments: data,
-    );
+    // navigatorKey.currentState?.pushNamed(
+    //   '/notification_page',
+    //   arguments: data,
+    // );
   }
 
   Future<void> _showNotification(RemoteNotification notification) async {

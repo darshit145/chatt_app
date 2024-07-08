@@ -12,6 +12,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../messaging/firebase_chat_app_messaginc.dart';
 class Api {
   static late ChatUsers me;
+  static String conversationIdForCall="";
   static FirebaseStorage firebaseStorage=FirebaseStorage.instance;
   static FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -131,6 +132,7 @@ class Api {
 
   }
   static Stream<QuerySnapshot<Map<String, dynamic>>> getUserStatus(ChatUsers user) {
+    conversationIdForCall=conversationId(user.id);
     return firebaseFirestore
         .collection("chats")
         .where("id", isNotEqualTo: userData.uid)

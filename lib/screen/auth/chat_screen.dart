@@ -14,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../customclass.dart';
 import 'api.dart';
+import 'audio_call_screen.dart';
 import 'chat_modal.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -31,20 +32,29 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //
+      //   },
+      // ),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: IconButton(onPressed: () {
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(),));
+              padding: EdgeInsets.all(2.0),
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AudioCallScreen(user: widget.user,),));
 
-            }, icon: Icon(Icons.camera,color: Colors.black,size: 30,)),
+              },icon: Icon(Icons.call,color: Colors.black,),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: IconButton(onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(user: widget.user,),));
+
+            }, icon: Icon(Icons.video_camera_front_sharp,color: Colors.black,size: 30,)),
           )
         ],
         title: StreamBuilder(
@@ -411,7 +421,7 @@ void pickImage() async {
 
   imagePicker(ImageSource source) async {
     final imagePicker = await ImagePicker().pickImage(
-        source: source, imageQuality: int.parse(textEditingController.text));
+        source: source, imageQuality: 100);
     if (imagePicker == null) return;
     final img = File(imagePicker.path);
 

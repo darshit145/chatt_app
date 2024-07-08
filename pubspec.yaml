@@ -50,6 +50,7 @@ dependencies:
   onesignal_flutter: ^3.2.1
   gallery_saver: ^2.3.2
 #  zego_uikit_prebuilt_call: ^1.4.3
+  zego_uikit_prebuilt_call: ^4.13.1
 
 
 dev_dependencies:

@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
           titleTextStyle: TextStyle(color: Colors.white,fontSize: 30)
         )
       ),
-      title: 'Chatt App',
+      title: '  App',
       debugShowCheckedModeBanner: false,
       home:  LoginnScreen(),
     );

@@ -150,8 +150,6 @@ Widget CustomCard(ChatUsers obj, BuildContext context) {
         isFirstUser = true;
       }
 
-      print(isFirstUser ? "" : chatModal.msg);
-
       return InkWell(
         onTap: () {
           Navigator.push(

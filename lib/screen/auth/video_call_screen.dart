@@ -22,22 +22,27 @@
 //     );
 //   }
 // }
-
-
+import 'package:chat_app/screen/auth/chat_users.dart';
+import "package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart";
 import 'package:flutter/material.dart';
+
+import 'api.dart';
 class VideoCallScreen extends StatelessWidget {
-  const VideoCallScreen({super.key});
+  ChatUsers user;
+  VideoCallScreen({super.key,required this.user});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return ZegoUIKitPrebuiltCall(
+
+      appID: 1841182921,
+      // 0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a
+      appSign: '0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a',
+      userID: user.name,
+      userName: user.id,
+      callID: "Api.conversationIdForCall",
+      config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall(),
+    );
+
   }
 }
-// ZegoUIKitPrebuiltCall(
-// appID: 1301125078,
-// appSign: 'your AppSign',
-// userID: 'local user id',
-// userName: 'local user name',
-// callID: 'call id',
-// config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall(),
-// );
