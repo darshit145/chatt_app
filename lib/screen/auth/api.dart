@@ -12,6 +12,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../messaging/firebase_chat_app_messaginc.dart';
 class Api {
   static late ChatUsers me;
+  static late ChatModal updateCallStatusNotif;
   static String conversationIdForCall="";
   static FirebaseStorage firebaseStorage=FirebaseStorage.instance;
   static FirebaseAuth auth = FirebaseAuth.instance;
@@ -90,20 +91,45 @@ class Api {
     final ext=file.path.split('.').last;
     final ref= firebaseStorage.ref().child("profile_pick/${userData.uid}.$ext");
     await ref.putFile(file,SettableMetadata(contentType: "images/$ext")).then((valu){
-      print("kook");
     });
     // print(ref.getDownloadURL());
     me.image=await ref.getDownloadURL();
 
 
   }
+
+
   static Future<void> sendMessage(ChatUsers user,String message,Type typ)async{
     String time=DateTime.now().millisecondsSinceEpoch.toString();
-    ChatModal chatModal=ChatModal(msg: message, read: "", formId: userData.uid, sent: time, told: user.id, type: typ);
+    ChatModal chatModal=ChatModal(msg: message, read: "", formId: userData.uid, sent: time, told: user.id, type: typ,);
     final ref=firebaseFirestore.collection("chatingss/${conversationId(user.id)}/message");
     await ref.doc(time).set(chatModal.toJson());
   }
 
+  static updateCallStatus(ChatModal Message,) {
+     try{
+       print("calllllllllllllllllllllllllllllllllllllllllllllllllllllll");
+       firebaseFirestore.collection("chatingss/${conversationId(Message.told)}/message").doc(Message.sent).update({
+         "isCallEnd":false
+       }).then((val){
+         print("Screasaadas ❤️❤️❤️❤️❤️❤️📺");
+       });
+     }catch (e){
+
+
+       print("🤷‍♀️🤷‍♀️🤷‍♀️");
+       print(e);
+       print("🤷‍♀️🤷‍♀️🤷‍♀️");
+     }
+  }
+  static Future<void> sendMessageOfCall(ChatUsers user,String message,Type typ,)async{
+    String time=DateTime.now().millisecondsSinceEpoch.toString();
+    // updateCallStatusNotif=ChatModal(msg: message, read: "", formId: userData.uid, sent: time, told: user.id, type: typ,isCallEnd: true);
+    updateCallStatusNotif=ChatModal(msg: message, read: "", formId: "${userData.uid}+${user.id}+${userData.displayName}to${user.name}", sent: time, told: user.id, type: typ,isCallEnd: true);
+    final ref=firebaseFirestore.collection("chatingss/${conversationId(user.id)}/message");
+    await ref.doc(time).set(updateCallStatusNotif.toJson());
+  }
+  // z3Rtn3r2InUfqJgK5keBcZ5r17v2+QWyLPoDJUyVPiqPQl5Y3XNrCn0e2+toMeet Bhanderi
   static Future<void> updateMessageReadStatus(ChatModal Message, )async{
    try{
      final dateTime=DateTime.now().millisecondsSinceEpoch;
@@ -124,7 +150,6 @@ class Api {
     final ext=file.path.split('.').last;
   final ref= firebaseStorage.ref().child("images/${conversationId(user.id)}/${DateTime.now().millisecondsSinceEpoch}.$ext");
   await ref.putFile(file,SettableMetadata(contentType: "images/$ext")).then((valu){
-    print("kook");
   });
   // print(ref.getDownloadURL());
   final imageUrl=await ref.getDownloadURL();

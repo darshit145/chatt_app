@@ -9,13 +9,21 @@ class AudioCallScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ZegoUIKitPrebuiltCall(
 
+      // appID: 1841182921,
+      // // 0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a
+      // appSign: '0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a',
+      // userID: user.name,
+      // userName: user.id,
+      // callID: "Api.conversationIdForCall",
+      // config: ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall(),
       appID: 1841182921,
       // 0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a
       appSign: '0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a',
-      userID: user.name,
-      userName: user.id,
-      callID: "Api.conversationIdForCall",
+      userID: DateTime.now().millisecondsSinceEpoch.toString() ,
+      userName: DateTime.now().toString(),
+      callID: '1212sdc',
       config: ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall(),
+
     );
   }
 }

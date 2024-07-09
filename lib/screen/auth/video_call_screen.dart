@@ -27,6 +27,49 @@ import "package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart";
 import 'package:flutter/material.dart';
 
 import 'api.dart';
+import 'chat_screen.dart';
+class VideoCallScreen extends StatefulWidget {
+  const VideoCallScreen({super.key});
+
+  @override
+  State<VideoCallScreen> createState() => _VideoCallScreenState();
+}
+
+class _VideoCallScreenState extends State<VideoCallScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return ZegoUIKitPrebuiltCall(
+
+      // appID: 1841182921,
+      // // 0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a
+      // appSign: '0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a',
+      // userID: user.name,
+      // userName: user.id,
+      // callID: "Api.conversationIdForCall",
+      // config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall(),
+      appID: 1841182921,
+      // 0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a
+      appSign: '0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a',
+      userID: DateTime
+          .now()
+          .millisecondsSinceEpoch
+          .toString(),
+      userName: DateTime.now().toString(),
+      callID: '1212sdc',
+      config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall(),
+
+    );
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    print("vvv😂😂😂");
+    Api.updateCallStatus(Api.updateCallStatusNotif);
+    super.dispose();
+  }
+}
+/*
+
 class VideoCallScreen extends StatelessWidget {
   ChatUsers user;
   VideoCallScreen({super.key,required this.user});
@@ -35,14 +78,23 @@ class VideoCallScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ZegoUIKitPrebuiltCall(
 
+      // appID: 1841182921,
+      // // 0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a
+      // appSign: '0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a',
+      // userID: user.name,
+      // userName: user.id,
+      // callID: "Api.conversationIdForCall",
+      // config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall(),
       appID: 1841182921,
       // 0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a
       appSign: '0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a',
-      userID: user.name,
-      userName: user.id,
-      callID: "Api.conversationIdForCall",
+      userID: DateTime.now().millisecondsSinceEpoch.toString() ,
+      userName: DateTime.now().toString(),
+      callID: '1212sdc',
       config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall(),
+
     );
 
   }
 }
+*/

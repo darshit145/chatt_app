@@ -44,6 +44,7 @@ class _ChatScreenState extends State<ChatScreen> {
               padding: EdgeInsets.all(2.0),
             child: IconButton(
               onPressed: () {
+                sendNotificationForCall(isVideo: false,user: widget.user, push_tocken: widget.user.push_tocken,userName: widget.user.name);
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AudioCallScreen(user: widget.user,),));
 
               },icon: Icon(Icons.call,color: Colors.black,),
@@ -52,7 +53,8 @@ class _ChatScreenState extends State<ChatScreen> {
           Padding(
             padding: const EdgeInsets.all(2.0),
             child: IconButton(onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(user: widget.user,),));
+              sendNotificationForCall(isVideo: true ,user: widget.user,push_tocken: widget.user.push_tocken,userName: widget.user.name);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen( ),));
 
             }, icon: Icon(Icons.video_camera_front_sharp,color: Colors.black,size: 30,)),
           )
@@ -117,7 +119,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   final data = snapshot.data?.docs;
                   // print(jsonEncode(data!.first.data().toString()));
                   chatModalList = data?.map((ew) {
+
                         String jesonEncoded = jsonEncode(ew.data());
+                        // print(jsonDecode(jesonEncoded)["type"]=="video"?"llllllllllllllllllllllpppppppppppppppppppppppp//////":"ko");
                         return ChatModal.fromJson2(jsonDecode(jesonEncoded));
                       }).toList() ??
                       [];
@@ -130,10 +134,37 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: Text("Say Hi 🤗"),
                   );
                 } else {
+
                   return ListView.builder(
-                    reverse: true,
+                    // reverse: true,
                     itemCount: chatModalList.length,
                     itemBuilder: (context, index) {
+                      if(chatModalList[index].isCallEnd!=null){
+                        if(chatModalList[index].isCallEnd==true && widget.user.id ==chatModalList[index].formId){
+                          String callingId=chatModalList[index].formId;
+
+                          print("callllllllllllllllllllllllllllll🤷‍♀️🤷♀ ️");
+                          setState(() {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => ok(),));
+
+                          });
+                          // showDialog(context: context, builder: (context) {
+                          //   return AlertDialog(
+                          //     title: Text("Some Incomming Calls",style: TextStyle(fontSize: 15),),
+                          //     actions: [
+                          //       TextButton(onPressed: () {
+                          //         Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(),));
+                          //       }, child: Text("Pick Up")),
+                          //       TextButton(onPressed: () {
+                          //         Navigator.pop(context);
+                          //         // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(),));
+                          //       }, child: Text("no Up"))
+                          //     ],
+                          //   );
+                          // },);
+                        }
+                      }
+
                       return ChatMessage(chatModalList[index]);
                     },
                   );
@@ -439,6 +470,31 @@ void pickImage() async {
         leading: wid,
 
       )
+    );
+  }
+}
+void sendNotificationForCall({required ChatUsers user ,required String push_tocken,required String userName,required bool isVideo}){
+  DateTime videoCallTime= DateTime.now();
+  String call=isVideo?"Video Call":"Voice Call";
+  Api.sendMessageOfCall(user,
+      "${videoCallTime.hour}:${videoCallTime.minute} $call\n ${videoCallTime.day}:${videoCallTime.month}:${videoCallTime.year}", Type.video);
+  sendNotification("You Have An Incomming Call", push_tocken,"From $userName");
+
+}
+class ok extends StatelessWidget {
+  const ok({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          child: Text("ok"),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(),));
+          },
+        ),
+      ),
     );
   }
 }

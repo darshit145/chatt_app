@@ -188,7 +188,6 @@ Widget CustomCard(ChatUsers obj, BuildContext context) {
   );
 }
 Future<void> sendNotification(String content,String senderId,String senderName) async {
-  print("call");
   var headers = {
     'Content-Type': 'application/json; charset=utf-8',
     'Authorization': "Basic NTcyN2UxMTItNDBmZS00NzhiLTkyNzMtNDNmZGFkYzM0YWMx",
