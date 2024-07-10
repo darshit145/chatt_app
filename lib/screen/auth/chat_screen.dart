@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:chat_app/screen/auth/call_integration_apis.dart';
 import 'package:chat_app/screen/auth/chat_users.dart';
 import 'package:chat_app/screen/auth/home_screen.dart';
+import 'package:chat_app/screen/auth/loginn_screen.dart';
 import 'package:chat_app/screen/auth/my_date_util.dart';
 import 'package:chat_app/screen/auth/video_call_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,7 +47,9 @@ class _ChatScreenState extends State<ChatScreen> {
             child: IconButton(
               onPressed: () {
                 sendNotificationForCall(isVideo: false,user: widget.user, push_tocken: widget.user.push_tocken,userName: widget.user.name);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AudioCallScreen(user: widget.user,),));
+               String id=  CallIntegrationApis.makeCallLibrary(widget.user,false);
+
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AudioCallScreen(id: id,),));
 
               },icon: Icon(Icons.call,color: Colors.black,),
             ),
@@ -54,7 +58,7 @@ class _ChatScreenState extends State<ChatScreen> {
             padding: const EdgeInsets.all(2.0),
             child: IconButton(onPressed: () {
               sendNotificationForCall(isVideo: true ,user: widget.user,push_tocken: widget.user.push_tocken,userName: widget.user.name);
-              Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen( ),));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(callId:Api.conversationIdForCall , ),));
 
             }, icon: Icon(Icons.video_camera_front_sharp,color: Colors.black,size: 30,)),
           )
@@ -140,28 +144,12 @@ class _ChatScreenState extends State<ChatScreen> {
                     itemCount: chatModalList.length,
                     itemBuilder: (context, index) {
                       if(chatModalList[index].isCallEnd!=null){
-                        if(chatModalList[index].isCallEnd==true && widget.user.id ==chatModalList[index].formId){
+                        // && widget.user.id ==chatModalList[index].formId
+                        if(chatModalList.last.isCallEnd==true ){
                           String callingId=chatModalList[index].formId;
+                          // showDialogIncommingCall(context);
 
-                          print("callllllllllllllllllllllllllllll🤷‍♀️🤷♀ ️");
-                          setState(() {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => ok(),));
 
-                          });
-                          // showDialog(context: context, builder: (context) {
-                          //   return AlertDialog(
-                          //     title: Text("Some Incomming Calls",style: TextStyle(fontSize: 15),),
-                          //     actions: [
-                          //       TextButton(onPressed: () {
-                          //         Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(),));
-                          //       }, child: Text("Pick Up")),
-                          //       TextButton(onPressed: () {
-                          //         Navigator.pop(context);
-                          //         // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(),));
-                          //       }, child: Text("no Up"))
-                          //     ],
-                          //   );
-                          // },);
                         }
                       }
 
@@ -285,6 +273,8 @@ void pickImage() async {
 
 
   Widget ChatMessage(ChatModal modal) {
+    //  && widget.user.id ==modal.formId
+
     if (modal.read.isEmpty) {
       Api.updateMessageReadStatus(modal);
     }
@@ -491,10 +481,32 @@ class ok extends StatelessWidget {
         child: ElevatedButton(
           child: Text("ok"),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(),));
+            // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(),));
           },
         ),
       ),
     );
   }
 }
+//
+// void showDialogIncommingCall(BuildContext context){
+//   print("callllllllllllllllllllllllllllll🤷‍♀️🤷♀ ️");
+//
+//   showDialog(context: context, builder: (context) {
+//     return LayoutBuilder(
+//       builder: (context, constraints) =>  AlertDialog(
+//         title: Text("Some Incomming Calls",style: TextStyle(fontSize: 15),),
+//         actions: [
+//           TextButton(onPressed: () {
+//             Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(),));
+//           }, child: Text("Pick Up")),
+//           TextButton(onPressed: () {
+//             Navigator.pop(context);
+//             // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(),));
+//           }, child: Text("no Up"))
+//         ],
+//       ),
+//
+//     );
+//   },);
+// }

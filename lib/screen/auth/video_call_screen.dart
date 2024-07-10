@@ -29,13 +29,21 @@ import 'package:flutter/material.dart';
 import 'api.dart';
 import 'chat_screen.dart';
 class VideoCallScreen extends StatefulWidget {
-  const VideoCallScreen({super.key});
+  String callId;
+  VideoCallScreen({super.key,required this.callId});
 
   @override
   State<VideoCallScreen> createState() => _VideoCallScreenState();
 }
 
 class _VideoCallScreenState extends State<VideoCallScreen> {
+  @override
+  void initState() {
+    ZegoUIKitPrebuiltCallInvitationService().send(invitees: [ZegoCallUser("1223312","dcdcs")], isVideoCall: true);
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ZegoUIKitPrebuiltCall(

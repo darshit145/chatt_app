@@ -64,7 +64,7 @@ class Api {
   }
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getallUser() {
-    print("object");
+
     return firebaseFirestore
         .collection("chats")
         .where("id", isNotEqualTo: userData.uid)
@@ -81,6 +81,7 @@ class Api {
   static String conversationId(String id)=>userData.uid.hashCode<=id.hashCode?"${userData.uid}_$id":"${id}_${userData.uid}";
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getallUserChat(ChatUsers user) {
+    conversationIdForCall=conversationId(user.id);
     return firebaseFirestore
         .collection("chatingss/${conversationId(user.id)}/message")
         .snapshots();
@@ -108,11 +109,9 @@ class Api {
 
   static updateCallStatus(ChatModal Message,) {
      try{
-       print("calllllllllllllllllllllllllllllllllllllllllllllllllllllll");
        firebaseFirestore.collection("chatingss/${conversationId(Message.told)}/message").doc(Message.sent).update({
          "isCallEnd":false
        }).then((val){
-         print("Screasaadas ❤️❤️❤️❤️❤️❤️📺");
        });
      }catch (e){
 
@@ -157,7 +156,6 @@ class Api {
 
   }
   static Stream<QuerySnapshot<Map<String, dynamic>>> getUserStatus(ChatUsers user) {
-    conversationIdForCall=conversationId(user.id);
     return firebaseFirestore
         .collection("chats")
         .where("id", isNotEqualTo: userData.uid)

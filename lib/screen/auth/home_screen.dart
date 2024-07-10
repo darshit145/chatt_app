@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import '../../messaging/firebase_chat_app_messaginc.dart';
+import 'call_integration_apis.dart';
+import 'check_incomming_call.dart';
 import 'loginn_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,8 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     OneSignal.shared.getDeviceState().then((val){
-      print(val?.userId.runtimeType);
-      print(val?.userId);
       deviceTocken=val?.userId??"NO";
       callingTheCurrentUser();
     });
@@ -54,7 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async{
-          print(deviceTocken);
+          // print(Api.userData.uid);
+          // CallIntegrationApis.makeCallLibrary();
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CheckIncommingCall(),));
 
         },
         child: Icon(
@@ -112,7 +114,6 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final data = snapshot.data!.docs;
-              print(data);
               users = data.map((e) {
                 String jesonEncoded = jsonEncode(e.data());
                 return ChatUsers.fromJson2(jsonDecode(jesonEncoded));
@@ -187,6 +188,7 @@ Widget CustomCard(ChatUsers obj, BuildContext context) {
     },
   );
 }
+
 Future<void> sendNotification(String content,String senderId,String senderName) async {
   var headers = {
     'Content-Type': 'application/json; charset=utf-8',
