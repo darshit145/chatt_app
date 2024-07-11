@@ -63,7 +63,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
           .millisecondsSinceEpoch
           .toString(),
       userName: DateTime.now().toString(),
-      callID: '1212sdc',
+      callID: widget.callId,
       config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall(),
 
     );

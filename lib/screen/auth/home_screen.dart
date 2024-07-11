@@ -203,7 +203,48 @@ Future<void> sendNotification(String content,String senderId,String senderName) 
       // "2c60b96d-6349-4881-85b7-ee31c2c3b999"
     ],
     "headings": {"en": "$senderName"},
-    "contents": {"en": "$content"}
+    "contents": {"en": "$content"},
+    "data": {
+      "screenone": "/homeScreen",
+    }
+  });
+
+  var response = await http.post(
+    Uri.parse('https://onesignal.com/api/v1/notifications'),
+    headers: headers,
+    body: body,
+  );
+
+  if (response.statusCode == 200) {
+    print('Notification sent successfully');
+  } else {
+    print('Failed to send notification: ${response.body}');
+  }
+}
+
+Future<void> sendNotificationFroCall(String content,String senderId,String senderName,bool isVideo,String callerName,String tocken) async {
+  var headers = {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Authorization': "Basic NTcyN2UxMTItNDBmZS00NzhiLTkyNzMtNDNmZGFkYzM0YWMx",
+  };
+
+  var body = json.encode({
+    "app_id": "35719def-c861-48a3-ae24-383a0e520291",
+    "include_player_ids": [
+      senderId,
+      // "bee668d7-9482-49e6-8241-0784673703dd",
+      // "2c60b96d-6349-4881-85b7-ee31c2c3b999"
+    ],
+    "headings": {"en": "$senderName"},
+    "contents": {"en": "$content"},
+    "data": {
+
+      "navigate": "/videocall",
+      "tocken":tocken,
+      "callerName":callerName,
+      "isVideo":isVideo
+    }
+
   });
 
   var response = await http.post(

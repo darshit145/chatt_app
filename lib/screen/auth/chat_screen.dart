@@ -46,10 +46,11 @@ class _ChatScreenState extends State<ChatScreen> {
               padding: EdgeInsets.all(2.0),
             child: IconButton(
               onPressed: () {
-                sendNotificationForCall(isVideo: false,user: widget.user, push_tocken: widget.user.push_tocken,userName: widget.user.name);
-               String id=  CallIntegrationApis.makeCallLibrary(widget.user,false);
+                final String callingId=DateTime.now().millisecondsSinceEpoch.toString();
+                sendNotificationForCall(callingId: callingId,isVideo: false,user: widget.user, push_tocken: widget.user.push_tocken,userName: widget.user.name);
+               // String id=  CallIntegrationApis.makeCallLibrary(widget.user,false);
 
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AudioCallScreen(id: id,),));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AudioCallScreen(id: callingId,),));
 
               },icon: Icon(Icons.call,color: Colors.black,),
             ),
@@ -57,8 +58,11 @@ class _ChatScreenState extends State<ChatScreen> {
           Padding(
             padding: const EdgeInsets.all(2.0),
             child: IconButton(onPressed: () {
-              sendNotificationForCall(isVideo: true ,user: widget.user,push_tocken: widget.user.push_tocken,userName: widget.user.name);
-              Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(callId:Api.conversationIdForCall , ),));
+              final String callingId=DateTime.now().millisecondsSinceEpoch.toString();
+              
+              sendNotificationForCall(callingId:callingId,isVideo: true ,user: widget.user,push_tocken: widget.user.push_tocken,userName: widget.user.name);
+
+              Navigator.push(context, MaterialPageRoute(builder: (context) => VideoCallScreen(callId:callingId, ),));
 
             }, icon: Icon(Icons.video_camera_front_sharp,color: Colors.black,size: 30,)),
           )
@@ -463,12 +467,12 @@ void pickImage() async {
     );
   }
 }
-void sendNotificationForCall({required ChatUsers user ,required String push_tocken,required String userName,required bool isVideo}){
+void sendNotificationForCall({required ChatUsers user ,required String callingId,required String push_tocken,required String userName,required bool isVideo}){
   DateTime videoCallTime= DateTime.now();
   String call=isVideo?"Video Call":"Voice Call";
   Api.sendMessageOfCall(user,
       "${videoCallTime.hour}:${videoCallTime.minute} $call\n ${videoCallTime.day}:${videoCallTime.month}:${videoCallTime.year}", Type.video);
-  sendNotification("You Have An Incomming Call", push_tocken,"From $userName");
+  sendNotificationFroCall("You Have An Incomming Call", push_tocken,"From $userName",isVideo,Api.me.name,callingId);
 
 }
 class ok extends StatelessWidget {

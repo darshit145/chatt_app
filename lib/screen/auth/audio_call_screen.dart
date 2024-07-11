@@ -27,7 +27,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
       appSign: '0c3613f130ec48665cf39250e87e6b54ad1791dcb573d581e4876d2b97ea948a',
       userID: DateTime.now().millisecondsSinceEpoch.toString() ,
       userName: DateTime.now().toString(),
-      callID: 'id',
+      callID: widget.id,
       config: ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall(),
 
     );

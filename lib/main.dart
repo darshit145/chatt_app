@@ -1,9 +1,13 @@
+import 'package:chat_app/demo.dart';
 import 'package:chat_app/firebase_options.dart';
+import 'package:chat_app/screen/auth/home_screen.dart';
+import 'package:chat_app/screen/auth/incomming_call_screen.dart';
 import 'package:chat_app/screen/auth/loginn_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 Future<void> main()  async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -25,6 +29,18 @@ Future<void> main()  async {
 void initOneSignal() {
   OneSignal.shared.setAppId("35719def-c861-48a3-ae24-383a0e520291");
   OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+    final data=result.notification.additionalData;
+    screen=data?['screenone'];
+    if(screen!=null){
+      navigatorKey.currentState?.pushNamed(screen!);
+    }else {
+        // if(data!["isVideo"])
+      dataForIncommingCall.add(data!["isVideo"]);
+      dataForIncommingCall.add(data!["callerName"]);
+      dataForIncommingCall.add(data!["tocken"]);
+      navigatorKey.currentState?.pushNamed(data!["navigate"]);
+    }
+
   });
   OneSignal.shared.setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event) {
     event.complete(event.notification);
@@ -32,7 +48,9 @@ void initOneSignal() {
   });
 
 }
-
+List dataForIncommingCall=[];
+String? screen;
+final navigatorKey=GlobalKey<NavigatorState>();
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -40,6 +58,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     initOneSignal();
     return   MaterialApp(
+      navigatorKey: navigatorKey,
+      // initialRoute: '/',
+      routes: {
+        // "/":(context)=>LoginnScreen(),
+        '/videocall':(context)=>IncommingCallScreen(infoList: dataForIncommingCall,),
+        '/homeScreen':(context)=>HomeScreen(),
+      },
       themeMode: ThemeMode.dark,
       theme: ThemeData(
         floatingActionButtonTheme: FloatingActionButtonThemeData(
